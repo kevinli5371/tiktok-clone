@@ -13,10 +13,10 @@ A minimal viable product (MVP) clone of TikTok built with React and Tailwind CSS
 
 ## Setup Instructions
 
-1. Extract all files to a folder named `tiktok-mvp`
+1. Extract all files to a folder named `tiktok-clone`
 2. Navigate to the project directory:
    ```bash
-   cd tiktok-mvp
+   cd tiktok-clone
    ```
 3. Install dependencies:
    ```bash
