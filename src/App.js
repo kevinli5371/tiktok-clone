@@ -1,17 +1,72 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Heart, MessageCircle, Share, MoreHorizontal, Music, Plus } from 'lucide-react';
 
+// --- added: import your local MP4s ---
+// Option A: videos in src/videos (bundled)
+import vid1 from './videos/kevin1.mp4';
+import vid2 from './videos/clash.mp4';
+import vid3 from './videos/la.mp4';
+import vid4 from './videos/kevin2.mp4';
+import vid5 from './videos/dog.mp4';
+import vid6 from './videos/code.mp4';
+
+
+
+// Option B: if using /public/videos instead, comment the 3 imports above and use:
+// const vid1 = "/videos/clip1.mp4";
+// const vid2 = "/videos/clip2.mp4";
+// const vid3 = "/videos/clip3.mp4";
+
 const VideoItem = ({ video, isActive }) => {
   const [liked, setLiked] = useState(false);
   const [following, setFollowing] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const videoRef = useRef(null);
+
+  // Play/pause based on active card
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    if (isActive) {
+      const p = el.play?.();
+      if (p && typeof p.then === 'function') p.catch(() => {});
+    } else {
+      el.pause?.();
+    }
+  }, [isActive]);
 
   return (
     <div className="relative w-full h-screen bg-black flex justify-center">
       {/* Video Container */}
       <div className="relative w-full max-w-sm bg-black">
-        {/* Black Video Placeholder */}
-        <div className="w-full h-full bg-black"></div>
-        
+        {/* Actual Video (bind to muted state!) */}
+        <video
+          ref={videoRef}
+          src={video.src}
+          className="w-full h-full object-cover"
+          muted={muted}
+          loop
+          playsInline
+          autoPlay={isActive}
+          preload="metadata"
+        />
+
+        {/* Tap-to-unmute overlay (requires user gesture for browsers to allow audio) */}
+        {muted && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setMuted(false);
+              // ensure audio starts right after unmuting
+              const el = videoRef.current;
+              el && el.play?.();
+            }}
+            className="absolute bottom-24 left-4 bg-white/20 text-white text-xs px-3 py-1 rounded"
+          >
+            Tap for sound
+          </button>
+        )}
+
         {/* Video Info Overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
           <div className="text-white mb-3">
@@ -91,6 +146,7 @@ const VideoItem = ({ video, isActive }) => {
   );
 };
 
+
 const TikTokMVP = () => {
   const [videos, setVideos] = useState([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -119,9 +175,76 @@ const TikTokMVP = () => {
     shares: Math.floor(Math.random() * 1000) + 50,
   });
 
+  // --- added: hardcoded videos to seed the feed ---
+  const HARDCODED_VIDEOS = [
+    {
+      id: 'h1',
+      src: vid1,
+      username: 'kevinsnmszt',
+      description: 'another post practice #OOTD',
+      music: 'original sound',
+      likes: 13400,
+      comments: 210,
+      shares: 77,
+    },
+    {
+      id: 'h2',
+      src: vid2,
+      username: 'clasher698',
+      description: 'PEKKA GOBLIN',
+      music: 'original sound',
+      likes: 9821,
+      comments: 156,
+      shares: 42,
+    },
+    {
+      id: 'h3',
+      src: vid3,
+      username: 'annooe',
+      description: 'lahacks with james',
+      music: 'Viral Sound • Creator',
+      likes: 42190,
+      comments: 890,
+      shares: 310,
+    },
+    {
+        id: 'h4',
+        src: vid4,
+        username: 'kevinsnmszt',
+        description: '#relatable #bigmen',
+        music: 'Viral Sound • Creator',
+        likes: 42190,
+        comments: 890,
+        shares: 310,
+      },
+      {
+        id: 'h5',
+        src: vid6,
+        username: 'ivan.wllb',
+        description: 'my first project',
+        music: 'Viral Sound • Creator',
+        likes: 42190,
+        comments: 890,
+        shares: 310,
+      },
+      {
+        id: 'h6',
+        src: vid5,
+        username: 'doggycharlyy',
+        description: 'still looking..',
+        music: 'Viral Sound • Creator',
+        likes: 42190,
+        comments: 890,
+        shares: 310,
+      },
+  ];
+
   // Initialize with some videos
   useEffect(() => {
-    const initialVideos = Array.from({ length: 5 }, (_, i) => generateVideo(i));
+    const initialVideos = [
+      ...HARDCODED_VIDEOS,
+      ...Array.from({ length: 2 }, (_, i) => generateVideo(i)), // keep a couple randoms after
+    ];
     setVideos(initialVideos);
   }, []);
 
