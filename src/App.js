@@ -15,19 +15,30 @@ const VIDEO_SOURCES = [vid1, vid2, vid3, vid4, vid5, vid6];
 const VideoItem = ({ video, isActive }) => {
   const [liked, setLiked] = useState(false);
   const [following, setFollowing] = useState(false);
+  const videoRef = useRef(null);
+
+  // Play/pause video based on isActive
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isActive) {
+        videoRef.current.play().catch(() => {});
+      } else {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0; // Optional: reset to start
+      }
+    }
+  }, [isActive]);
 
   return (
     <div className="relative w-full h-screen bg-black flex justify-center">
-      {/* Video Container */}
       <div className="relative w-full max-w-sm bg-black">
-        {/* Replace black box with actual video */}
         <video
+          ref={videoRef}
           src={video.src}
           className="w-full h-full object-cover"
           muted
           loop
           playsInline
-          autoPlay={isActive}
         />
 
         {/* Video Info Overlay */}
