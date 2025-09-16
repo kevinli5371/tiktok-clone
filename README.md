@@ -32,7 +32,7 @@ The app will open at `http://localhost:3000`
 ## Project Structure
 
 ```
-tiktok-mvp/
+tiktok-clone/
 ├── public/
 │   ├── index.html
 │   └── manifest.json
