@@ -10,12 +10,7 @@ import vid4 from './videos/kevin2.mp4';
 import vid5 from './videos/dog.mp4';
 import vid6 from './videos/code.mp4';
 
-
-
-// Option B: if using /public/videos instead, comment the 3 imports above and use:
-// const vid1 = "/videos/clip1.mp4";
-// const vid2 = "/videos/clip2.mp4";
-// const vid3 = "/videos/clip3.mp4";
+const VIDEO_SOURCES = [vid1, vid2, vid3, vid4, vid5, vid6];
 
 const VideoItem = ({ video, isActive }) => {
   const [liked, setLiked] = useState(false);
@@ -123,6 +118,7 @@ const TikTokMVP = () => {
   // Generate mock video data
   const generateVideo = (id) => ({
     id,
+    src: VIDEO_SOURCES[id % VIDEO_SOURCES.length],
     username: `user${Math.floor(Math.random() * 1000)}`,
     description: [
       "Just another day in paradise 🌴 #vibes #mood",
@@ -208,10 +204,7 @@ const TikTokMVP = () => {
 
   // Initialize with some videos
   useEffect(() => {
-    const initialVideos = [
-      ...HARDCODED_VIDEOS,
-      ...Array.from({ length: 2 }, (_, i) => generateVideo(i)), // keep a couple randoms after
-    ];
+    const initialVideos = Array.from({ length: 12 }, (_, i) => generateVideo(i));
     setVideos(initialVideos);
   }, []);
 
@@ -221,7 +214,7 @@ const TikTokMVP = () => {
     setIsLoading(true);
     
     setTimeout(() => {
-      const newVideos = Array.from({ length: 5 }, (_, i) => 
+      const newVideos = Array.from({ length: 6 }, (_, i) => 
         generateVideo(videos.length + i)
       );
       setVideos(prev => [...prev, ...newVideos]);
