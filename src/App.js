@@ -20,52 +20,20 @@ import vid6 from './videos/code.mp4';
 const VideoItem = ({ video, isActive }) => {
   const [liked, setLiked] = useState(false);
   const [following, setFollowing] = useState(false);
-  const [muted, setMuted] = useState(true);
-  const videoRef = useRef(null);
-
-  // Play/pause based on active card
-  useEffect(() => {
-    const el = videoRef.current;
-    if (!el) return;
-    if (isActive) {
-      const p = el.play?.();
-      if (p && typeof p.then === 'function') p.catch(() => {});
-    } else {
-      el.pause?.();
-    }
-  }, [isActive]);
 
   return (
     <div className="relative w-full h-screen bg-black flex justify-center">
       {/* Video Container */}
       <div className="relative w-full max-w-sm bg-black">
-        {/* Actual Video (bind to muted state!) */}
+        {/* Replace black box with actual video */}
         <video
-          ref={videoRef}
           src={video.src}
           className="w-full h-full object-cover"
-          muted={muted}
+          muted
           loop
           playsInline
           autoPlay={isActive}
-          preload="metadata"
         />
-
-        {/* Tap-to-unmute overlay (requires user gesture for browsers to allow audio) */}
-        {muted && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setMuted(false);
-              // ensure audio starts right after unmuting
-              const el = videoRef.current;
-              el && el.play?.();
-            }}
-            className="absolute bottom-24 left-4 bg-white/20 text-white text-xs px-3 py-1 rounded"
-          >
-            Tap for sound
-          </button>
-        )}
 
         {/* Video Info Overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
@@ -145,7 +113,6 @@ const VideoItem = ({ video, isActive }) => {
     </div>
   );
 };
-
 
 const TikTokMVP = () => {
   const [videos, setVideos] = useState([]);
